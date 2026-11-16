@@ -1,0 +1,154 @@
+import java.util.Scanner;
+
+/**
+ * Stack and Queue using singly linked lists.
+ * Menu-driven console program (no fixed size, grows dynamically).
+ */
+public class StackQueueLinkedList {
+
+    // One node of the linked list
+    static class Node {
+        int data;
+        Node next;
+
+        Node(int data) {
+            this.data = data;
+        }
+    }
+
+    // Stack: Last In, First Out (insert and remove at the top)
+    static class LinkedStack {
+        private Node top;
+
+        void push(int value) {
+            Node node = new Node(value);
+            node.next = top;
+            top = node;
+        }
+
+        int pop() {
+            if (top == null) {
+                throw new IllegalStateException("Stack underflow: stack is empty");
+            }
+            int value = top.data;
+            top = top.next;
+            return value;
+        }
+
+        int peek() {
+            if (top == null) {
+                throw new IllegalStateException("Stack is empty");
+            }
+            return top.data;
+        }
+
+        void display() {
+            if (top == null) {
+                System.out.println("Stack is empty");
+                return;
+            }
+            System.out.print("Stack (top to bottom): ");
+            for (Node cur = top; cur != null; cur = cur.next) {
+                System.out.print(cur.data + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // Queue: First In, First Out (insert at rear, remove from front)
+    static class LinkedQueue {
+        private Node front, rear;
+
+        void enqueue(int value) {
+            Node node = new Node(value);
+            if (rear == null) {
+                front = rear = node;
+            } else {
+                rear.next = node;
+                rear = node;
+            }
+        }
+
+        int dequeue() {
+            if (front == null) {
+                throw new IllegalStateException("Queue underflow: queue is empty");
+            }
+            int value = front.data;
+            front = front.next;
+            if (front == null) {
+                rear = null;
+            }
+            return value;
+        }
+
+        void display() {
+            if (front == null) {
+                System.out.println("Queue is empty");
+                return;
+            }
+            System.out.print("Queue (front to rear): ");
+            for (Node cur = front; cur != null; cur = cur.next) {
+                System.out.print(cur.data + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    static int readInt(Scanner sc, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                return Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid whole number.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        LinkedStack stack = new LinkedStack();
+        LinkedQueue queue = new LinkedQueue();
+
+        while (true) {
+            System.out.println("\n--- Stack and Queue (Linked List) ---");
+            System.out.println("1. Push   2. Pop   3. Peek   4. Show stack");
+            System.out.println("5. Enqueue   6. Dequeue   7. Show queue");
+            System.out.println("0. Exit");
+            int choice = readInt(sc, "Enter choice: ");
+
+            try {
+                switch (choice) {
+                    case 1:
+                        stack.push(readInt(sc, "Value to push: "));
+                        break;
+                    case 2:
+                        System.out.println("Popped: " + stack.pop());
+                        break;
+                    case 3:
+                        System.out.println("Top: " + stack.peek());
+                        break;
+                    case 4:
+                        stack.display();
+                        break;
+                    case 5:
+                        queue.enqueue(readInt(sc, "Value to enqueue: "));
+                        break;
+                    case 6:
+                        System.out.println("Dequeued: " + queue.dequeue());
+                        break;
+                    case 7:
+                        queue.display();
+                        break;
+                    case 0:
+                        System.out.println("Goodbye!");
+                        return;
+                    default:
+                        System.out.println("Invalid choice.");
+                }
+            } catch (IllegalStateException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+}
